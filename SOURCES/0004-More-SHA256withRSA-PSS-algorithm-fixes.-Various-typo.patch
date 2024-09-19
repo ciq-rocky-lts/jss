@@ -1,0 +1,40 @@
+From eb9e9114295999eb490f81f232332b32aa0d76da Mon Sep 17 00:00:00 2001
+From: Jack Magne <jmagne@test.host.com>
+Date: Wed, 6 May 2020 21:31:28 -0400
+Subject: [PATCH 4/4] More SHA256withRSA/PSS algorithm fixes. Various typos
+ resolved to result in this algorithm being able to function correctly.
+
+---
+ org/mozilla/jss/crypto/SignatureAlgorithm.java          | 2 +-
+ org/mozilla/jss/netscape/security/x509/AlgorithmId.java | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/org/mozilla/jss/crypto/SignatureAlgorithm.java b/org/mozilla/jss/crypto/SignatureAlgorithm.java
+index c41b5401..a46c2b92 100644
+--- a/org/mozilla/jss/crypto/SignatureAlgorithm.java
++++ b/org/mozilla/jss/crypto/SignatureAlgorithm.java
+@@ -102,7 +102,7 @@ public class SignatureAlgorithm extends Algorithm {
+ 
+     public static final SignatureAlgorithm
+     RSAPSSSignatureWithSHA512Digest = new SignatureAlgorithm(SEC_OID_PKCS1_RSA_PSS_SIGNATURE, "RSAPSSSignatureWithSHA512Digest",
+-            null, DigestAlgorithm.SHA384, OBJECT_IDENTIFIER.PKCS1.subBranch(10) );
++            null, DigestAlgorithm.SHA512, OBJECT_IDENTIFIER.PKCS1.subBranch(10) );
+ 
+     /**********************************************************************
+      * Raw RSA signing. This algorithm does not do any hashing, it merely
+diff --git a/org/mozilla/jss/netscape/security/x509/AlgorithmId.java b/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
+index 4440fd4d..0a332f23 100644
+--- a/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
++++ b/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
+@@ -763,7 +763,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
+         } else if ("SHA384withRSA/PSS".equals(algName)) {
+             pssSpec = new PSSParameterSpec("SHA-384", "MGF1", MGF1ParameterSpec.SHA384, 48, 1);
+ 
+-        } else if ("SHA384withRSA/PSS".equals(algName)) {
++        } else if ("SHA512withRSA/PSS".equals(algName)) {
+             pssSpec = new PSSParameterSpec("SHA-512", "MGF1", MGF1ParameterSpec.SHA512, 64, 1);
+         }
+         try {
+-- 
+2.26.2
+

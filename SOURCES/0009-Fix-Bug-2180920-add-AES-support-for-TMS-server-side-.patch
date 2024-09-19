@@ -1,0 +1,75 @@
+From 3adb695ea6a7f50d7631a4c048f75dae078889fa Mon Sep 17 00:00:00 2001
+From: Jack Magne <jmagne@redhat.com>
+Date: Thu, 24 Aug 2023 20:41:00 -0400
+Subject: [PATCH 5/8] Fix Bug 2180920 add AES support for TMS server-side
+ keygen on latest HSM / FIPS environment [RHCS 9.7.z]
+
+Back port AES KWP wrap alg support only for JSS in this branch to allow for the TMS bug referenced above to work.
+---
+ org/mozilla/jss/crypto/Algorithm.c           | 3 ++-
+ org/mozilla/jss/crypto/Algorithm.h           | 2 +-
+ org/mozilla/jss/crypto/Algorithm.java        | 2 ++
+ org/mozilla/jss/crypto/KeyWrapAlgorithm.java | 8 ++++++++
+ 4 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/org/mozilla/jss/crypto/Algorithm.c b/org/mozilla/jss/crypto/Algorithm.c
+index 84290ad..9492d01 100644
+--- a/org/mozilla/jss/crypto/Algorithm.c
++++ b/org/mozilla/jss/crypto/Algorithm.c
+@@ -96,7 +96,8 @@ JSS_AlgInfo JSS_AlgTable[NUM_ALGS] = {
+ /* the CKM_AES_KEY_WRAP_* have different defs than CKM_NSS_AES_KEY_WRAP_*  */
+ /* 65 */    {CKM_AES_KEY_WRAP, PK11_MECH},
+ /* 66 */    {CKM_AES_KEY_WRAP_PAD, PK11_MECH},
+-/* 67 */    {SEC_OID_PKCS1_RSA_PSS_SIGNATURE, SEC_OID_TAG}
++/* 67 */    {SEC_OID_PKCS1_RSA_PSS_SIGNATURE, SEC_OID_TAG},
++/* 68 */    {CKM_AES_KEY_WRAP_KWP, PK11_MECH}
+ /* REMEMBER TO UPDATE NUM_ALGS!!! */
+ };
+ 
+diff --git a/org/mozilla/jss/crypto/Algorithm.h b/org/mozilla/jss/crypto/Algorithm.h
+index 09b5869..6bf4d96 100644
+--- a/org/mozilla/jss/crypto/Algorithm.h
++++ b/org/mozilla/jss/crypto/Algorithm.h
+@@ -24,7 +24,7 @@ typedef struct JSS_AlgInfoStr {
+     JSS_AlgType type;
+ } JSS_AlgInfo;
+ 
+-#define NUM_ALGS 68
++#define NUM_ALGS 69
+ 
+ extern JSS_AlgInfo JSS_AlgTable[];
+ extern CK_ULONG JSS_symkeyUsage[];
+diff --git a/org/mozilla/jss/crypto/Algorithm.java b/org/mozilla/jss/crypto/Algorithm.java
+index 26d4758..bd93f13 100644
+--- a/org/mozilla/jss/crypto/Algorithm.java
++++ b/org/mozilla/jss/crypto/Algorithm.java
+@@ -229,5 +229,7 @@ public class Algorithm {
+     protected static final short CKM_AES_KEY_WRAP_PAD=66;
+     // RSA-PSS
+     protected static final short SEC_OID_PKCS1_RSA_PSS_SIGNATURE = 67;
++    // CKM_AES_KEY_WRAP_KWP for HSM support
++    protected static final int CKM_AES_KEY_WRAP_KWP = 68;
+ 
+ }
+diff --git a/org/mozilla/jss/crypto/KeyWrapAlgorithm.java b/org/mozilla/jss/crypto/KeyWrapAlgorithm.java
+index 3113f61..346eca7 100644
+--- a/org/mozilla/jss/crypto/KeyWrapAlgorithm.java
++++ b/org/mozilla/jss/crypto/KeyWrapAlgorithm.java
+@@ -130,6 +130,14 @@ public class KeyWrapAlgorithm extends Algorithm {
+     AES_KEY_WRAP_PAD = new KeyWrapAlgorithm(CKM_NSS_AES_KEY_WRAP_PAD, "AES KeyWrap/Padding",
+                 (Class<?>) null, true, 8);
+ 
++    /*
++     * Added to support HSMs. There is no CKM_NSS equivalent, unlike the
++     * above two mechanisms.
++    */
++    public static final KeyWrapAlgorithm
++    AES_KEY_WRAP_PAD_KWP = new KeyWrapAlgorithm(CKM_AES_KEY_WRAP_KWP, "AES KeyWrap/Wrapped",
++                (Class<?>) null, true, 8);
++
+     public static final OBJECT_IDENTIFIER AES_KEY_WRAP_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.8");
+     public static final OBJECT_IDENTIFIER AES_KEY_WRAP_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.5");
+     public static final OBJECT_IDENTIFIER AES_CBC_PAD_OID = new OBJECT_IDENTIFIER("2.16.840.1.101.3.4.1.2");
+-- 
+1.8.3.1
+

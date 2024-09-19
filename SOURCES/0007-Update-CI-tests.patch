@@ -1,0 +1,52 @@
+From b0b720bcbb74115cf15aeee84c9fe27309e8c95e Mon Sep 17 00:00:00 2001
+From: "Endi S. Dewata" <edewata@redhat.com>
+Date: Wed, 12 May 2021 14:51:57 -0500
+Subject: [PATCH 3/8] Update CI tests
+
+The CI tests has been modified to run on push and
+pull requests regardless of branch name.
+
+The Fedora 26 and 29 tests have been removed since
+apparently the container images are no longer
+available.
+---
+ .github/workflows/required-v4.4.x.yml | 22 +---------------------
+ 1 file changed, 1 insertion(+), 21 deletions(-)
+
+diff --git a/.github/workflows/required-v4.4.x.yml b/.github/workflows/required-v4.4.x.yml
+index ce096a6..015001f 100644
+--- a/.github/workflows/required-v4.4.x.yml
++++ b/.github/workflows/required-v4.4.x.yml
+@@ -1,28 +1,8 @@
+ name: Required Tests for v4.4.x branch
+ 
+-on:
+-  push:
+-    branches:
+-    - v4.4.x
+-  pull_request:
+-    branches:
+-    - v4.4.x
++on: [push, pull_request]
+ 
+ jobs:
+-  fedora26:
+-    runs-on: ubuntu-latest
+-    steps:
+-    - name: Clone the repository
+-      uses: actions/checkout@v2
+-    - name: Build and Run the Docker Image
+-      run: bash tools/run_container.sh "fedora_26"
+-  fedora29:
+-    runs-on: ubuntu-latest
+-    steps:
+-    - name: Clone the repository
+-      uses: actions/checkout@v2
+-    - name: Build and Run the Docker Image
+-      run: bash tools/run_container.sh "fedora_29"
+   fedora31:
+     runs-on: ubuntu-latest
+     steps:
+-- 
+1.8.3.1
+

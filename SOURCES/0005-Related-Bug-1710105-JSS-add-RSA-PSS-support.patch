@@ -1,0 +1,31 @@
+From 3a12e8892984a96088e3d2b4a65188db60d91564 Mon Sep 17 00:00:00 2001
+From: Jack Magne <jmagne@localhost.localdomain>
+Date: Wed, 20 May 2020 16:50:24 -0700
+Subject: [PATCH 1/8] Related: Bug 1710105 - JSS: add RSA PSS support
+
+Add PSS cases to algorithm name translating method.
+---
+ org/mozilla/jss/netscape/security/util/Cert.java | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/org/mozilla/jss/netscape/security/util/Cert.java b/org/mozilla/jss/netscape/security/util/Cert.java
+index ccbbcc0..bcd04b6 100644
+--- a/org/mozilla/jss/netscape/security/util/Cert.java
++++ b/org/mozilla/jss/netscape/security/util/Cert.java
+@@ -63,6 +63,13 @@ public class Cert {
+             return SignatureAlgorithm.ECSignatureWithSHA384Digest;
+         else if (algname.equals("SHA512withEC"))
+             return SignatureAlgorithm.ECSignatureWithSHA512Digest;
++       else if (algname.equals("SHA256withRSA/PSS"))
++            return SignatureAlgorithm.RSAPSSSignatureWithSHA256Digest;
++        else if (algname.equals("SHA384withRSA/PSS"))
++            return SignatureAlgorithm.RSAPSSSignatureWithSHA384Digest;
++        else if (algname.equals("SHA512withRSA/PSS"))
++            return SignatureAlgorithm.RSAPSSSignatureWithSHA512Digest;
++
+         return null;
+     }
+ 
+-- 
+1.8.3.1
+

@@ -1,0 +1,31 @@
+From 27d929c6c451b01c3c1b5a61964fdaded8a855e9 Mon Sep 17 00:00:00 2001
+From: "Endi S. Dewata" <edewata@redhat.com>
+Date: Wed, 12 May 2021 13:05:39 -0500
+Subject: [PATCH 2/8] Update .gitignore
+
+---
+ .gitignore | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/.gitignore b/.gitignore
+index ba077a4..936aa24 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1 +1,13 @@
+-bin
++# Ignore build directories and artifacts
++/bin
++*.OBJ/
++build/
++src/*.a
++src/*.o
++target/
++
++# These files are automatically generated from their .in equivalents
++org/mozilla/jss/util/jssver.h
++org/mozilla/jss/jssconfig.h
++src/main/java/org/mozilla/jss/util/jssver.h
++src/main/java/org/mozilla/jss/jssconfig.h
+-- 
+1.8.3.1
+

@@ -1,0 +1,26 @@
+From 7e04acac65fd6d14fb24e49ec0d3fb0f111fc6e9 Mon Sep 17 00:00:00 2001
+From: Alexander Scheel <ascheel@redhat.com>
+Date: Thu, 23 Apr 2020 12:11:20 -0400
+Subject: [PATCH 2/4] Fix SHA512withRSA/PSS identifier
+
+Signed-off-by: Alexander Scheel <ascheel@redhat.com>
+---
+ org/mozilla/jss/netscape/security/x509/AlgorithmId.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/org/mozilla/jss/netscape/security/x509/AlgorithmId.java b/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
+index 9936b6e9..ed899fd0 100644
+--- a/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
++++ b/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
+@@ -1034,7 +1034,7 @@ public class AlgorithmId implements Serializable, DerEncoder {
+      */
+     public static final String[] ALL_SIGNING_ALGORITHMS = new String[]
+     {
+-            "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA1withRSA","SHA256withRSA/PSS","SHA384withRSA/PSS","SHA5121withRSA/PSS",
++            "SHA256withRSA", "SHA384withRSA", "SHA512withRSA", "SHA1withRSA","SHA256withRSA/PSS","SHA384withRSA/PSS","SHA512withRSA/PSS",
+             "SHA256withEC", "SHA384withEC", "SHA512withEC", "SHA1withEC" };
+ 
+     public static void dumpBytes(byte[] data)
+-- 
+2.26.2
+

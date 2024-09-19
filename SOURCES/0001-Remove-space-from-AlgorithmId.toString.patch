@@ -1,0 +1,39 @@
+From a6fd897651ab28ca79a36b38eab7b107357cc218 Mon Sep 17 00:00:00 2001
+From: Alexander Scheel <ascheel@redhat.com>
+Date: Mon, 13 Apr 2020 09:27:50 -0400
+Subject: [PATCH 1/4] Remove space from AlgorithmId.toString()
+
+In cadc299fa69554e2e7ab9226298be639219476ab and v4.4.x commit
+e1ee07a3c19cd15d7dab1dedf383128a2b83b925, AlgorithmId was updated
+to unconditionally add an extra space to toString, to separate the
+algorithm name from the parameters. This suffices in some cases, but
+AlgorithmId.toString() is used by PKI to compare against a tokenized
+list of characters. Removing the extraneous whitespace was the solution
+proposed in PKI commit 53de751485b04fe2a1555228342ed642c9a9e347, but
+this should really be handled in JSS instead of PKI.
+
+Signed-off-by: Alexander Scheel <ascheel@redhat.com>
+---
+ org/mozilla/jss/netscape/security/x509/AlgorithmId.java | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/org/mozilla/jss/netscape/security/x509/AlgorithmId.java b/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
+index 46c5a258..9936b6e9 100644
+--- a/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
++++ b/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
+@@ -627,7 +627,11 @@ public class AlgorithmId implements Serializable, DerEncoder {
+      * Returns a string describing the algorithm and its parameters.
+      */
+     public String toString() {
+-        return (algName() + " " + paramsToString());
++        if (params == null) {
++            return algName();
++        }
++
++        return algName() + " " + paramsToString();
+     }
+ 
+     /**
+-- 
+2.26.2
+

@@ -1,0 +1,43 @@
+From 3dcc932854381d56ce6701082921096848801e1c Mon Sep 17 00:00:00 2001
+From: Alexander Scheel <ascheel@redhat.com>
+Date: Thu, 23 Apr 2020 16:54:00 -0400
+Subject: [PATCH 3/4] Add AlgorithmId.toStringWithParams, fix toString
+
+PKI's usage of AlgorithmId.toString() doesn't handle having the
+parameters encoded in the toString() representation of the id.
+Move toString() back to only having the contents of algName, and
+move parameters to a separate method.
+
+Signed-off-by: Alexander Scheel <ascheel@redhat.com>
+---
+ .../jss/netscape/security/x509/AlgorithmId.java      | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/org/mozilla/jss/netscape/security/x509/AlgorithmId.java b/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
+index ed899fd0..4440fd4d 100644
+--- a/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
++++ b/org/mozilla/jss/netscape/security/x509/AlgorithmId.java
+@@ -624,9 +624,19 @@ public class AlgorithmId implements Serializable, DerEncoder {
+     }
+ 
+     /**
+-     * Returns a string describing the algorithm and its parameters.
++     * Returns a string describing only the algorithm without parameters.
++     *
++     * Use toStringWithParams() for algorithm name and paramaters, or
++     * paramsToString() for just parameters.
+      */
+     public String toString() {
++        return algName();
++    }
++
++    /**
++     * Returns a string describing the algorithm and its parameters.
++     */
++    public String toStringWithParams() {
+         if (params == null) {
+             return algName();
+         }
+-- 
+2.26.2
+
